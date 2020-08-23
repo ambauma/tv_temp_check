@@ -8,6 +8,7 @@ Automate launching the Skyward to do temperature checks at Tri-Valley schools.
 
 python3 -m venv venv
 source venv/bin/activate
+python setup.py develop
 
 ### Run tests
 

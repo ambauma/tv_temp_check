@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
+import setuptools
 
 setup(name='TvTempReport',
       version='0.0.1',
@@ -8,10 +9,11 @@ setup(name='TvTempReport',
       author='Andrew Baumann',
       author_email='andrew.m.baumann@gmail.com',
       url='none',
-      packages=['distutils', 'distutils.command'],
+      packages=['tv_temp_report'],
       test_requires = [
           "black==19.*",
           "pytest-mockito==0.*",
+          "pytest-cov==2.*"
       ],
       install_requires = [
           "selenium==3.*",

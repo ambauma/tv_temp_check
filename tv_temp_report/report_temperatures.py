@@ -25,7 +25,7 @@ def gen_key(location: str) -> bytes:
         with open(location, "wb") as key_file:
             key_file.write(key)
             print(f"Wrote encryption key to {location}")
-        return key 
+        return key
  
 
 def credentials() -> Tuple[str, str]:
@@ -62,17 +62,6 @@ def pull_from_internet(url: str, file_name: str) -> None:
             archive.write(data)
 
 
-def gunzip(gz_compressed_file: str, tar_file) -> None:
-    """Remove gzip compression from a tar.gz file, leaving a tar file."""
-    with gzip.open(gz_compressed_file, "rb") as compressed, open(tar_file, "wb") as extracted:
-        while True:
-            block = compressed.read(1024)
-            if not block:
-                break
-            else:
-                extracted.write(block)
-
-
 def untar(input_file: str, extracted_folder: str):
     """Un-tar file(s) into a folder."""
     with tarfile.open(input_file) as data:
@@ -84,14 +73,13 @@ def install_driver():
     url = "https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz"
     tar_gz_file = "geckodriver.tar.gz"
     pull_from_internet(url, tar_gz_file)
-    #extracted_file = "geckodriver.tar"
-    #gunzip(tar_gz_file, extracted_file)
     untar(tar_gz_file, "./venv/bin/")
     os.unlink(tar_gz_file)
     if os.path.exists("geckodriver.log"):
         os.unlink("geckodriver.log")
     sys.path.insert(0, f"{os.getcwd()}/")
     print(f"Path is now {sys.path}")
+
 
 def run_browser(login_value: str, password_value: str):
     browser = webdriver.Firefox()
