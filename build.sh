@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 case $1 in
-    "pylint")
-        pylint `ls -R setup.py tests tv_temp_report|grep .py$|xargs`
+    "setup")
+        rm -rf venv
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install .[TEST]
+        python setup.py develop
+        ;;
+    "test")
+        pytest
         ;;
     *) echo "Unknown option $1";;
 esac

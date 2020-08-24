@@ -1,5 +1,6 @@
 [run]
 branch = True
+include = */tv_temp_report/*
 omit = 
     tests/*
     venv/*
