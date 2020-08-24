@@ -7,7 +7,7 @@ import setuptools  # pylint: disable=unused-import
 TEST_DEPS = [
     "pytest-cov==2.*",
     "pytest-mockito==0.*",
-    "pylint==2.*",
+    "pytest-pylint==0.17.*",
     "flake8==3.*",
     "black==19.10b0",
 ]
