@@ -10,6 +10,7 @@ case $1 in
         ;;
     "test")
         pytest
+        coverage-badge -f -o coverage.svg
         ;;
     *) echo "Unknown option $1";;
 esac

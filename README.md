@@ -2,6 +2,11 @@
 
 Automate launching the Skyward to do temperature checks at Tri-Valley schools.
 
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+[![Issues](https://img.shields.io/github/issues-raw/ambauma/tv_temp_check.svg?maxAge=25000)](https://github.com/ambauma/tv_temp_check/issues)
+![CI Build](https://github.com/ambauma/tv_temp_check/workflows/Python%20application/badge.svg)
+![Coverage](coverage.svg)
+
 ## Development Notes
 
 ### Setup

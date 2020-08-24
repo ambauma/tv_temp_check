@@ -10,6 +10,7 @@ TEST_DEPS = [
     "pytest-pylint==0.17.*",
     "flake8==3.*",
     "black==19.10b0",
+    "coverage-badge==1.0.1",
 ]
 
 setup(
