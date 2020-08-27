@@ -8,7 +8,7 @@ omit =
 [report]
 exclude_lines = 
     if __name__ == .__main__.:
-fail_under = 32.14
+fail_under = 92.00
 
 [html]
 directory = coverage_html_report

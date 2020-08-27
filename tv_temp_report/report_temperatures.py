@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Open a Skyward window to report temperatures."""
-import os
+from os import unlink, path, getcwd
 from urllib.request import urlopen
 from pathlib import Path
-import sys
 import tarfile
 from typing import Tuple
 from getpass import getpass
@@ -13,7 +12,7 @@ from selenium import webdriver
 
 def gen_key(location: str) -> bytes:
     """Generate a key for the symmetric encryption."""
-    if os.path.exists(location):
+    if path.exists(location):
         key = open(location, "rb").read()
         return key
     key = Fernet.generate_key()
@@ -28,7 +27,7 @@ def credentials() -> Tuple[str, str]:
     home = str(Path.home())
     ctrl_a = chr(1)
     creds_file = f"{home}/.tv_temp_check.creds"
-    if os.path.exists(creds_file):
+    if path.exists(creds_file):
         fernet = Fernet(gen_key(f"{home}/.tv_temp_check.key"))
         with open(creds_file, "rb") as encrypted:
             encrypted_data = encrypted.read()
@@ -75,30 +74,28 @@ def install_driver():
     tar_gz_file = "geckodriver.tar.gz"
     pull_from_internet(url, tar_gz_file)
     untar(tar_gz_file, "./venv/bin/")
-    os.unlink(tar_gz_file)
-    if os.path.exists("geckodriver.log"):
-        os.unlink("geckodriver.log")
-    sys.path.insert(0, f"{os.getcwd()}/")
-    print(f"Path is now {sys.path}")
+    unlink(tar_gz_file)
+    # if os.path.exists("geckodriver.log"):
+    #     os.unlink("geckodriver.log")
+    # sys.path.insert(0, f"{os.getcwd()}/")
+    # print(f"Path is now {sys.path}")
 
 
 def run_browser(login_value: str, password_value: str):
     """Interact with the web browser."""
-    browser = webdriver.Firefox()
+    browser = webdriver.firefox.webdriver.WebDriver()
     browser.get(
         "https://skyward.iscorp.com/scripts/wsisa.dll/WService=wsedutrivalleyil/seplog01.w"
     )
     browser.implicitly_wait(10)  # seconds
-    login_id = browser.find_element_by_id("login")
-    password = browser.find_element_by_id("password")
-    login_id.send_keys(login_value)
-    password.send_keys(password_value)
+    browser.find_element_by_id("login").send_keys(login_value)
+    browser.find_element_by_id("password").send_keys(password_value)
     browser.find_element_by_id("bLogin").click()
 
 
 def main():
     """Run the application."""
-    if not os.path.exists(f"{os.getcwd()}/venv/bin/geckodriver"):
+    if not path.exists(f"{getcwd()}/venv/bin/geckodriver"):
         install_driver()
     username, password = credentials()
     run_browser(username, password)
