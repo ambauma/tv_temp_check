@@ -6,7 +6,7 @@ import pathlib
 from pathlib import Path
 from cryptography.fernet import Fernet
 from py._path.local import LocalPath
-from mockito import expect, mock
+from mockito import expect, mock, contains
 from tv_temp_report import report_temperatures as sut
 
 
@@ -107,16 +107,18 @@ def test_run_browser():
     sut.run_browser("user", "password")
 
 
-def test_main_with_driver_already_there(tmpdir: LocalPath):
+def test_main_with_driver_already_there():
     """Test the main function with driver existing."""
-    expect(sut.path, times=1).exists(tmpdir.join("venv", "bin", "geckodriver")).thenReturn(True)
-    expect(sut, times=1).credentials().thenReturn("user", "password")
+    expect(sut.path, times=1).exists(contains("venv/bin/geckodriver")).thenReturn(True)
+    expect(sut, times=1).credentials().thenReturn(tuple(["user", "password"]))
     expect(sut, times=1).run_browser("user", "password")
+    sut.main()
 
 
-def test_main_downloading_driver(tmpdir: LocalPath):
+def test_main_downloading_driver():
     """Test the main function with driver missing."""
-    expect(sut.path, times=1).exists(tmpdir.join("venv", "bin", "geckodriver")).thenReturn(False)
+    expect(sut.path, times=1).exists(contains("venv/bin/geckodriver")).thenReturn(False)
     expect(sut, times=1).install_driver()
-    expect(sut, times=1).credentials().thenReturn("user", "password")
+    expect(sut, times=1).credentials().thenReturn(tuple(["user", "password"]))
     expect(sut, times=1).run_browser("user", "password")
+    sut.main()

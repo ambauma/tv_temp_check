@@ -75,10 +75,6 @@ def install_driver():
     pull_from_internet(url, tar_gz_file)
     untar(tar_gz_file, "./venv/bin/")
     unlink(tar_gz_file)
-    # if os.path.exists("geckodriver.log"):
-    #     os.unlink("geckodriver.log")
-    # sys.path.insert(0, f"{os.getcwd()}/")
-    # print(f"Path is now {sys.path}")
 
 
 def run_browser(login_value: str, password_value: str):
