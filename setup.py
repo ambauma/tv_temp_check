@@ -29,4 +29,9 @@ setup(
         "setuptools==49.*",
         "cryptography==3.0",
     ],
+    entry_points={
+        "console_scripts": [
+            "tv_temp_check = tv_temp_report.report_temperatures:main"
+        ]
+    }
 )
