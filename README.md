@@ -22,3 +22,10 @@ pytest tests/
 ### Run the application
 
 python tv_temp_report/report_temperatures
+
+### Release
+
+```bash
+pip install pyinstaller
+pyinstaller --console --onefile tv_temp_report/report_temperatures.py
+```

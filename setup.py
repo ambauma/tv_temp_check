@@ -15,7 +15,7 @@ TEST_DEPS = [
 
 setup(
     name="TvTempReport",
-    version="0.0.1",
+    version="0.1.0",
     description="Report child temperatures to Tri-Valley.",
     author="ambauma",
     author_email="ambauma@users.noreply.github.com",
