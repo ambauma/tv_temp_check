@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Open a Skyward window to report temperatures."""
+import platform
+import tempfile
+import os
 from os import unlink, path, getcwd
 from urllib.request import urlopen
 from pathlib import Path
@@ -7,7 +10,9 @@ import tarfile
 from typing import Tuple
 from getpass import getpass
 from cryptography.fernet import Fernet
+from zipfile import ZipFile
 from selenium import webdriver
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 
 def gen_key(location: str) -> bytes:
@@ -58,6 +63,12 @@ def pull_from_internet(url: str, file_name: str) -> None:
             archive.write(data)
 
 
+def unzip(input_file: str, extracted_folder: str):
+    """Un-zip file(s) into a folder."""
+    with ZipFile(input_file, "r") as data:
+        data.extractall(extracted_folder)
+
+
 def untar(input_file: str, extracted_folder: str):
     """Un-tar file(s) into a folder."""
     with tarfile.open(input_file) as data:
@@ -67,19 +78,32 @@ def untar(input_file: str, extracted_folder: str):
 def install_driver():
     """Installing the Firefox Driver."""
     version = "v0.27.0"
+    os_platform = "win64.zip" if platform.system() == "Windows" else "linux64.tar.gz"
     url = (
         "https://github.com/mozilla/geckodriver/releases/download/"
-        f"{version}/geckodriver-{version}-linux64.tar.gz"
+        f"{version}/geckodriver-{version}-{os_platform}"
     )
-    tar_gz_file = "geckodriver.tar.gz"
-    pull_from_internet(url, tar_gz_file)
-    untar(tar_gz_file, "./venv/bin/")
-    unlink(tar_gz_file)
+    compressed_file = f"geckodriver-{version}-{os_platform}"
+    pull_from_internet(url, compressed_file)
+    if platform.system() == "Windows":
+        unzip(compressed_file, tempfile.gettempdir())
+    else:
+        untar(compressed_file, tempfile.gettempdir())
+    unlink(compressed_file)
 
 
 def run_browser(login_value: str, password_value: str):
     """Interact with the web browser."""
-    browser = webdriver.firefox.webdriver.WebDriver()
+    file_extension = ".exe" if platform.system() == "Windows" else ""
+    print(
+        f"Geckodriver location {tempfile.gettempdir() + os.path.sep + 'geckodriver' + file_extension}"
+    )
+    browser = webdriver.firefox.webdriver.WebDriver(
+        executable_path=tempfile.gettempdir()
+        + os.path.sep
+        + "geckodriver"
+        + file_extension
+    )
     browser.get(
         "https://skyward.iscorp.com/scripts/wsisa.dll/WService=wsedutrivalleyil/seplog01.w"
     )
@@ -91,7 +115,8 @@ def run_browser(login_value: str, password_value: str):
 
 def main():
     """Run the application."""
-    if not path.exists(f"{getcwd()}/venv/bin/geckodriver"):
+    file_extension = ".exe" if platform.system() == "Windows" else ""
+    if not path.exists(f"{tempfile.gettempdir()}/geckodriver{file_extension}"):
         install_driver()
     username, password = credentials()
     run_browser(username, password)
