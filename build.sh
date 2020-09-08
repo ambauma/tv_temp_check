@@ -12,7 +12,7 @@ case $1 in
         python setup.py develop
         ;;
     "test")
-        pytest
+        pytest --pylint --cov=tv_temp_report/ --cov-report html
         coverage-badge -f -o coverage.svg
         ;;
     *) echo "Unknown option $1";;

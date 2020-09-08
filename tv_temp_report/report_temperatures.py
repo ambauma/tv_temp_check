@@ -65,8 +65,8 @@ def pull_from_internet(url: str, file_name: str) -> None:
 
 def unzip(input_file: str, extracted_folder: str):
     """Un-zip file(s) into a folder."""
-    with ZipFile(input_file, "r") as zip_file:
-        zip_file.extractall(extracted_folder)
+    with ZipFile(input_file, "r") as data:
+        data.extractall(extracted_folder)
 
 
 def untar(input_file: str, extracted_folder: str):
@@ -83,7 +83,7 @@ def install_driver():
         "https://github.com/mozilla/geckodriver/releases/download/"
         f"{version}/geckodriver-{version}-{os_platform}"
     )
-    compressed_file = "geckodriver-{version}-{os_platform}"
+    compressed_file = f"geckodriver-{version}-{os_platform}"
     pull_from_internet(url, compressed_file)
     if platform.system() == "Windows":
         unzip(compressed_file, tempfile.gettempdir())
@@ -95,9 +95,15 @@ def install_driver():
 def run_browser(login_value: str, password_value: str):
     """Interact with the web browser."""
     file_extension = ".exe" if platform.system() == "Windows" else ""
-    print(f"Geckodriver location {tempfile.gettempdir() + os.path.sep + 'geckodriver' + file_extension}")
-    #binary = FirefoxBinary(tempfile.gettempdir() + os.path.sep + "geckodriver")
-    browser = webdriver.firefox.webdriver.WebDriver(executable_path=tempfile.gettempdir() + os.path.sep + "geckodriver" + file_extension)
+    print(
+        f"Geckodriver location {tempfile.gettempdir() + os.path.sep + 'geckodriver' + file_extension}"
+    )
+    browser = webdriver.firefox.webdriver.WebDriver(
+        executable_path=tempfile.gettempdir()
+        + os.path.sep
+        + "geckodriver"
+        + file_extension
+    )
     browser.get(
         "https://skyward.iscorp.com/scripts/wsisa.dll/WService=wsedutrivalleyil/seplog01.w"
     )
@@ -105,11 +111,6 @@ def run_browser(login_value: str, password_value: str):
     browser.find_element_by_id("login").send_keys(login_value)
     browser.find_element_by_id("password").send_keys(password_value)
     browser.find_element_by_id("bLogin").click()
-
-
-def venv_name() -> str:
-    """The name of the venv."""
-    return "Scripts" if platform.system() == "Windows" else "bin"
 
 
 def main():
