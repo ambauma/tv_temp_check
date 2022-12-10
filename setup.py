@@ -25,9 +25,10 @@ setup(
     extras_require={"TEST": TEST_DEPS,},
     install_requires=[
         "selenium==3.*",
-        "wheel==0.*",
-        "setuptools==49.*",
-        "cryptography==3.0",
+        "wheel",
+        "setuptools",
+        "cryptography>=3,<4",
+        "py>=1.11.0,<2"
     ],
     entry_points={
         "console_scripts": [
