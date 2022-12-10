@@ -68,30 +68,26 @@ def unzip(input_file: str, extracted_folder: str):
     with ZipFile(input_file, "r") as data:
         data.extractall(extracted_folder)
 
+def _is_within_directory(directory, target):
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+    prefix = os.path.commonprefix([abs_directory, abs_target])
+    return prefix == abs_directory
+
+def _safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+    for member in tar.getmembers():
+        print(f"member is {member}")
+        member_path = os.path.join(path, member.name)
+        print(f"Checking {path} | {member_path}: {_is_within_directory(path, member_path)}")
+        if not _is_within_directory(path, member_path):
+            raise Exception("Attempted Path Traversal in Tar File")
+    print(f"running {path}, {members}, {numeric_owner}")
+    tar.extractall(path, members, numeric_owner=numeric_owner)
 
 def untar(input_file: str, extracted_folder: str):
     """Un-tar file(s) into a folder."""
     with tarfile.open(input_file) as data:
-        def is_within_directory(directory, target):
-        	
-        	abs_directory = os.path.abspath(directory)
-        	abs_target = os.path.abspath(target)
-        
-        	prefix = os.path.commonprefix([abs_directory, abs_target])
-        	
-        	return prefix == abs_directory
-        
-        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
-        
-        	for member in tar.getmembers():
-        		member_path = os.path.join(path, member.name)
-        		if not is_within_directory(path, member_path):
-        			raise Exception("Attempted Path Traversal in Tar File")
-        
-        	tar.extractall(path, members, numeric_owner=numeric_owner) 
-        	
-        
-        safe_extract(data, extracted_folder)
+        _safe_extract(data, path=extracted_folder)
 
 
 def install_driver():

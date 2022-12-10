@@ -74,14 +74,15 @@ def test_pull_from_internet(tmp_path: Path):
         assert fake_archive.readlines() == ["First line.\n", "Second Line."]
 
 
-def test_untar():
+def test_untar(tmp_path):
     """Test the untar function."""
-    fake_tar = mock()
-    expect(sut.tarfile).open("the_tar_file").thenReturn(fake_tar)
-    expect(fake_tar).__enter__(...).thenReturn(fake_tar)
-    expect(fake_tar).extractall("the_folder")
-    expect(fake_tar).__exit__(...).thenReturn(fake_tar)
-    sut.untar("the_tar_file", "the_folder")
+    import tarfile
+    pathlib.Path(f"{tmp_path}/one.txt").write_text("one")
+    with tarfile.open(f"{tmp_path}/some.tar", "w") as f:
+        f.add(f"{tmp_path}/one.txt", "one.txt")
+    os.unlink(f"{tmp_path}/one.txt")
+    sut.untar(f"{tmp_path}/some.tar", f"{tmp_path}/the_folder")
+    assert pathlib.Path(f"{tmp_path}/the_folder/one.txt").exists()
 
 
 def test_unzip():
